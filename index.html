@@ -6,7 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body> 
-    <h1>从今日起，这里就将开启记录我们生活的点点滴滴，你准备好了嘛~~</h1>
+    
 </body>
-
+<script src="pdfobject.js"></script>
+<script>
+     window.onload = function (){
+        var myPDF = new PDFObject({ url: "2019-03-29.pdf" }).embed();
+      };
+</script>
 </html>
