@@ -73,7 +73,7 @@ AV.init({
 
 function operate(value, row, index) {
 	var str = "";
-	 str += "<button class='btn btn-info  check' >查看</button>"
+	 str += "<button class='btn btn-info btn-sm  check' >查看</button>"
 	return str;
 }
 /**
@@ -147,20 +147,6 @@ function showTable() {
 	       		}
 	       	}
        },
-       {
-	       	field : 'updatedDate',
-	       	title : '最近修改时间',
-	       	align:"center",
-	       	valign:'middle',
-	       	formatter:function(val,row){
-	       		var time = row._serverData.updatedDate;
-	       		if(time==null || time=="" || time==undefined){
-	       			return ""
-	       		}else{
-	       			return formatDTime2(row._serverData.updatedDate);
-	       		}
-	       	}
-       	},
        	{
        		field : 'op',
        		title : '操作',
