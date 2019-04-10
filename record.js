@@ -6,8 +6,6 @@ AV.init({
   appKey: 'yLASWKfAAaOnLc9toHMTq4K6'
 });
 
-var flag_type = 1;
-
 //var TestObject = AV.Object.extend('TestObject');
 //var testObject = new TestObject();
 //	testObject.save({
@@ -71,49 +69,6 @@ var flag_type = 1;
 
 
 
-
-
-function operate(value, row, index) {
-	var str = "";
-	 str += "<button class='btn btn-info btn-sm  check' >查看</button>"
-	return str;
-}
-/**
- * 操作点击事件
- */
-window.operateEvents = {
-		'click .check' : function(e, value, row, index) {
-			
-			var str = 'update article set number='+(row._serverData.number+1)+' where objectId="'+row.id+'"';
-			AV.Query.doCloudQuery(str).then(function (data) {
-			  console.log(JSON.stringify(data));
-			}, function (error) {
-			  console.error(error);
-			});
-			
-			var Record = AV.Object.extend('record');
-			var record = new Record();
-				record.save(
-					{
-						articleId: row.id,
-						name:row._serverData.name,
-						createDate:new Date().getTime()
-					}
-				).then(function(object) {
-					console.log(object);
-			})
-			
-			$("#childPage").show(); 
-			if(row._serverData.type==1){
-				$("#childPage").attr("src","rj/"+row._serverData.name+".html") 
-			}else if(row._serverData.type==2){
-				$("#childPage").attr("src","wz/"+row._serverData.name+".html") 
-			}
-//			$("#childPage").attr("src","rj/2019-05-05.html") 
-		}
-};
-
-
 showTable();
 function showTable() {
 	$('#table').bootstrapTable('destroy').bootstrapTable({
@@ -139,37 +94,21 @@ function showTable() {
 	       	formatter:function(val,row){
 	       		return row._serverData.name;
 	       	}
-       	},
-       {
-	       	field : 'number',
-	       	title : '浏览次数',
-	       	align:"center",
-	       	valign:'middle',
-	       	formatter:function(val,row){
-	       		return row._serverData.number;
-	       	}
        },
        {
-	       	field : 'createdDate',
-	       	title : '创建时间',
+	       	field : 'createDate',
+	       	title : '浏览时间',
 	       	align:"center",
 	       	valign:'middle',
 	       	formatter:function(val,row){
-	       		var time = row._serverData.createdDate;
+	       		var time = row._serverData.createDate;
 	       		if(time==null || time=="" || time==undefined){
 	       			return ""
 	       		}else{
-	       			return formatDTime2(row._serverData.createdDate);
+	       			return formatDTime2(row._serverData.createDate);
 	       		}
 	       	}
-       },
-       	{
-       		field : 'op',
-       		title : '操作',
-       		align:"center",
-       		formatter : operate,
-       		events : operateEvents
-       	}
+       }
 		],
 		onLoadSuccess : function(data) {
 
@@ -179,42 +118,15 @@ function showTable() {
 };
 
 
-AV.Query.doCloudQuery('select * from article where type = 1 order by createdDate desc').then(function (data) {
+AV.Query.doCloudQuery('select * from record order by createDate desc').then(function (data) {
     console.log(data);
     $('#table').bootstrapTable('load',data.results);
 }, function (error) {
-    console.log(JSON.stringify(error));
+    console.log(JSON.stringify(error)); 
 });  
 
 
-function toRj(){
-	flag_type = 1;
-	AV.Query.doCloudQuery('select * from article where type = 1 order by createdDate desc').then(function (data) {
-	    console.log(data);
-	    $('#table').bootstrapTable('load',data.results);
-	}, function (error) {
-	    console.log(JSON.stringify(error));
-	});  
-}
 
-function toWz(){
-	flag_type = 2;
-	AV.Query.doCloudQuery('select * from article where type = 2 order by createdDate desc').then(function (data) {
-	    console.log(data);
-	    $('#table').bootstrapTable('load',data.results);
-	}, function (error) {
-	    console.log(JSON.stringify(error));
-	});  
-}
-
-function refresh(){
-	AV.Query.doCloudQuery('select * from article where type = '+flag_type+' order by createdDate desc').then(function (data) {
-	    console.log(data);
-	    $('#table').bootstrapTable('load',data.results);
-	}, function (error) {
-	    console.log(JSON.stringify(error));
-	}); 
-}
 
 
 function formatDTime2(time) {
